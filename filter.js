@@ -1,19 +1,19 @@
 // even numbers [1, 2, 3, 4, 5] => [2, 4]
-// const filterEvenNumbers = function (numbers) { };
+const filterEvenNumbers = function (numbers) { };
 
 // words with more than 5 letters ["apple", "banana", "kiwi", "grape"] => ["banana"]
-// const filterLongWords = function (words) { };
+const filterLongWords = function (words) { };
 
 // people older than 30 [{name: "Alice", age: 25}, {name: "Bob", age: 35}] => [{name: "Bob", age: 35}]
-const isOlderThan = function (ageThreshold) {
-  return function (person) {
-    return person.age > ageThreshold;
+const isMoreThan = function (threshold,type) {
+  return function (item) {
+    return item[type] > threshold;
   }
 }
 const filterAdults = function (people) {
-  return people.filter(isOlderThan(30));
+  return people.filter(isMoreThan(30,'age'));
  };
- 
+
 // active users [{username: "alice", active: true}, {username: "bob", active: false}] => [{username: "alice", active: true}]
 // const filterActiveUsers = function (users) { };
 
@@ -21,8 +21,9 @@ const filterAdults = function (people) {
 const filterNumbersGreaterThanTen = function (numbers) { };
 
 // books with more than 200 pages [{title: "Book 1", pages: 150}, {title: "Book 2", pages: 250}] => [{title: "Book 2", pages: 250}]
-const filterLongBooks = function (books) { };
-
+const filterLongBooks = function (books) {
+  return books.filter(isMoreThan(200, 'pages'));
+ };
 // users with incomplete profiles [{username: "alice", profileComplete: true}, {username: "bob", profileComplete: false}] => [{username: "bob", profileComplete: false}]
 const filterIncompleteProfiles = function (users) { };
 
