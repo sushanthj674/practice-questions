@@ -86,18 +86,39 @@ const getPrice = function (product) {
   return product.price;
 };
 
-const filterBelowAveragePrice = function (products) {
-  const avgPrice = products.map(getPrice).reduce(add, 0) / products.length;
-  return products.filter(invert(isTypeMoreThan(avgPrice,'price')));
+const getAvg = function (numbers) {
+  return numbers.reduce(add, 0) / numbers.length;
 };
 
-// console.log(filterBelowAveragePrice([{ name: "item1", price: 10 }, { name: "item2", price: 20 }, { name: "item3", price: 5 }]));
+const filterBelowAveragePrice = function (products) {
+  const avgPrice = getAvg(products.map(getPrice));
+  return products.filter(invert(isTypeMoreThan(avgPrice, 'price')));
+};
+
 
 // active users who posted in the last 7 days [{username: "alice", lastPostDate: "2024-12-01", active: true}, {username: "bob", lastPostDate: "2024-11-20", active: true}] => [{username: "alice", lastPostDate: "2024-12-01", active: true}]
 const filterRecentActiveUsers = function (users) { };
 
 // students who passed all subjects [{name: "John", subjects: [{name: "Math", passed: true}, {name: "Science", passed: true}]}, {name: "Jane", subjects: [{name: "Math", passed: false}, {name: "Science", passed: true}]}] => [{name: "John", subjects: [{name: "Math", passed: true}, {name: "Science", passed: true}]}]
-const filterStudentsWithAllSubjectsPassed = function (students) { };
+const getValuAt = function (key) {
+  return function (object) {
+    return object[key];
+  };
+};
+
+const isTrue = function (bool) {
+  return bool;
+};
+
+const isPassed = function (report) {
+  const status = report.subjects.map(getValuAt('passed'));
+  return status.every(isTrue);
+};
+
+const filterStudentsWithAllSubjectsPassed = function (students) {
+  return students.filter(isPassed);
+};
+// console.log(filterStudentsWithAllSubjectsPassed([{name: "John", subjects: [{name: "Math", passed: true}, {name: "Science", passed: true}]}, {name: "Jane", subjects: [{name: "Math", passed: false}, {name: "Science", passed: true}]}]));
 
 // people whose birthday is this month [{name: "Alice", birthDate: "2024-12-01"}, {name: "Bob", birthDate: "2024-11-01"}] => [{name: "Alice", birthDate: "2024-12-01"}]
 const filterBirthdaysThisMonth = function (people) { };
