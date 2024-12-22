@@ -65,13 +65,28 @@ const isOdd = function (number) {
 const sumOfOddNumbers = function (numbers) {
   return numbers.filter(isOdd).reduce(add, 0);
  }
- console.log(sumOfOddNumbers([1, 2, 3, 4, 5]));
 
 // countNegativeNumbers([1, -2, 3, -4]) => 2
-const countNegativeNumbers = function (numbers) { }
+const invert = function (f) {
+  return function (params) {
+    return !f(params);
+  };
+};
+
+const increaseIf= function (fn){
+  return function (count, number) {
+    return fn(number) ? count + 1 : count;
+  }
+}
+const countNegativeNumbers = function (numbers) {
+  return numbers.reduce(increaseIf(invert(isPositive)), 0);
+ }
 
 // findSumOfEvenSquares([1, 2, 3, 4]) => 20
-const findSumOfEvenSquares = function (numbers) { }
+const findSumOfEvenSquares = function (numbers) { 
+  return numbers.filter(invert(isOdd)).map(getSquare).reduce(add, 0);
+}
+console.log(findSumOfEvenSquares([1, 2, 3, 4]));
 
 // concatenateWords(["hello", "world"]) => "helloworld"
 const concatenateWords = function (words) { }
