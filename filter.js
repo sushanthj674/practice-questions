@@ -29,7 +29,7 @@ const filterNumbersGreaterThanTen = function (numbers) {
 
 // books with more than 200 pages [{title: "Book 1", pages: 150}, {title: "Book 2", pages: 250}] => [{title: "Book 2", pages: 250}]
 const filterLongBooks = function (books) {
-  return books.filter(isMoreThan(200, 'pages'));
+  return books.filter(isTypeMoreThan(200, 'pages'));
 };
 // users with incomplete profiles [{username: "alice", profileComplete: true}, {username: "bob", profileComplete: false}] => [{username: "bob", profileComplete: false}]
 
@@ -60,11 +60,22 @@ const filterInStockProducts = function (products) {
 };
 // console.log(filterInStockProducts([{ product: "apple", inStock: true }, { product: "banana", inStock: false }]));
 
-// orders placed in the last 30 days [{orderDate: "2024-11-01"}, {orderDate: "2024-12-01"}] => [{orderDate: "2024-12-01"}]
-const filterRecentOrders = function (orders) { };
-
 // products with a price lower than the average [{name: "item1", price: 10}, {name: "item2", price: 20}, {name: "item3", price: 5}] => [{name: "item1", price: 10}, {name: "item3", price: 5}]
-const filterBelowAveragePrice = function (products) { };
+
+const add = function (a, b) {
+  return a + b;
+};
+
+const getPrice = function (product) {
+  return product.price;
+};
+
+const filterBelowAveragePrice = function (products) {
+  const avgPrice = products.map(getPrice).reduce(add, 0) / products.length;
+  return products.filter(invert(isTypeMoreThan(avgPrice,'price')));
+};
+
+console.log(filterBelowAveragePrice([{ name: "item1", price: 10 }, { name: "item2", price: 20 }, { name: "item3", price: 5 }]));
 
 // active users who posted in the last 7 days [{username: "alice", lastPostDate: "2024-12-01", active: true}, {username: "bob", lastPostDate: "2024-11-20", active: true}] => [{username: "alice", lastPostDate: "2024-12-01", active: true}]
 const filterRecentActiveUsers = function (users) { };
