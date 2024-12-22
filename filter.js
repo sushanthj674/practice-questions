@@ -60,6 +60,22 @@ const filterInStockProducts = function (products) {
 };
 // console.log(filterInStockProducts([{ product: "apple", inStock: true }, { product: "banana", inStock: false }]));
 
+// orders placed in the last 30 days [{orderDate: "2024-11-01"}, {orderDate: "2024-12-01"}] => [{orderDate: "2024-12-01"}]
+const isRecentOrder = function (order) {
+  const today = 23;
+  const thisMonth = 12;
+  const daysThisYear = (30 * thisMonth) - (30 - today);
+  const orderDate = order.orderDate;
+  const day = orderDate.slice(8, 10);
+  const month = orderDate.slice(5, 7);
+  const daysFlown = (30 * month) - (30 - day);
+  return (daysThisYear - daysFlown) < 31 && (daysThisYear - daysFlown) > -1;
+};
+const filterRecentOrders = function (orders) {
+  return orders.filter(isRecentOrder);
+};
+
+// console.log(filterRecentOrders([{ orderDate: "2024-11-22" }, { orderDate: "2024-12-01" }]));
 // products with a price lower than the average [{name: "item1", price: 10}, {name: "item2", price: 20}, {name: "item3", price: 5}] => [{name: "item1", price: 10}, {name: "item3", price: 5}]
 
 const add = function (a, b) {
@@ -75,7 +91,7 @@ const filterBelowAveragePrice = function (products) {
   return products.filter(invert(isTypeMoreThan(avgPrice,'price')));
 };
 
-console.log(filterBelowAveragePrice([{ name: "item1", price: 10 }, { name: "item2", price: 20 }, { name: "item3", price: 5 }]));
+// console.log(filterBelowAveragePrice([{ name: "item1", price: 10 }, { name: "item2", price: 20 }, { name: "item3", price: 5 }]));
 
 // active users who posted in the last 7 days [{username: "alice", lastPostDate: "2024-12-01", active: true}, {username: "bob", lastPostDate: "2024-11-20", active: true}] => [{username: "alice", lastPostDate: "2024-12-01", active: true}]
 const filterRecentActiveUsers = function (users) { };
