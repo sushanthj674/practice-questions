@@ -100,52 +100,70 @@ const filterBelowAveragePrice = function (products) {
 const filterRecentActiveUsers = function (users) { };
 
 // students who passed all subjects [{name: "John", subjects: [{name: "Math", passed: true}, {name: "Science", passed: true}]}, {name: "Jane", subjects: [{name: "Math", passed: false}, {name: "Science", passed: true}]}] => [{name: "John", subjects: [{name: "Math", passed: true}, {name: "Science", passed: true}]}]
-const getValuAt = function (key) {
-  return function (object) {
-    return object[key];
-  };
-};
-
-const isTrue = function (bool) {
-  return bool;
-};
 
 const isPassed = function (report) {
-  const status = report.subjects.map(getValuAt('passed'));
-  return status.every(isTrue);
+  const status = report.subjects.map(getValueAt('passed'));
+  return status.every((bool) => { return bool; });
 };
 
 const filterStudentsWithAllSubjectsPassed = function (students) {
   return students.filter(isPassed);
 };
-// console.log(filterStudentsWithAllSubjectsPassed([{name: "John", subjects: [{name: "Math", passed: true}, {name: "Science", passed: true}]}, {name: "Jane", subjects: [{name: "Math", passed: false}, {name: "Science", passed: true}]}]));
 
 // people whose birthday is this month [{name: "Alice", birthDate: "2024-12-01"}, {name: "Bob", birthDate: "2024-11-01"}] => [{name: "Alice", birthDate: "2024-12-01"}]
 const filterBirthdaysThisMonth = function (people) { };
 
 // orders that exceed the average order value [{orderId: 1, amount: 20}, {orderId: 2, amount: 50}, {orderId: 3, amount: 10}] => [{orderId: 2, amount: 50}]
-const filterHighValueOrders = function (orders) { };
+const filterHighValueOrders = function (orders) {
+  const avgValue = getAvg(orders.map(getValueAt('amount')));
+
+  return orders.filter(isTypeMoreThan(avgValue, 'amount'));
+};
 
 // books with reviews higher than the average rating [{title: "Book 1", rating: 4}, {title: "Book 2", rating: 5}, {title: "Book 3", rating: 3}] => [{title: "Book 2", rating: 5}]
-const filterTopRatedBooks = function (books) { };
+const filterTopRatedBooks = function (books) {
+  const avgRating = getAvg(books.map(getValueAt('rating')));
+
+  return books.filter(isTypeMoreThan(avgRating, 'rating'));
+};
 
 // employees whose salary is higher than the department average [{name: "Alice", salary: 5000, department: "HR"}, {name: "Bob", salary: 7000, department: "HR"}, {name: "Charlie", salary: 4000, department: "IT"}] => [{name: "Bob", salary: 7000, department: "HR"}]
-const filterHighSalaryEmployees = function (employees) { };
+const filterHighSalaryEmployees = function (employees) {
+  const avgSalary = getAvg(employees.map(getValueAt('salary')));
+
+  return employees.filter(isTypeMoreThan(avgSalary, 'salary'));
+};
 
 // cities with a population higher than the median [{name: "City A", population: 2000}, {name: "City B", population: 5000}, {name: "City C", population: 3000}] => [{name: "City B", population: 5000}]
-const filterCitiesAboveMedianPopulation = function (cities) { };
+const filterCitiesAboveMedianPopulation = function (cities) {
+  const avgPopulation = getAvg(cities.map(getValueAt('population')));
+
+  return cities.filter(isTypeMoreThan(avgPopulation, 'population'));
+};
 
 // posts with more than the average number of likes [{postId: 1, likes: 100}, {postId: 2, likes: 200}, {postId: 3, likes: 150}] => [{postId: 2, likes: 200}]
-const filterPopularPosts = function (posts) { };
+const filterPopularPosts = function (posts) {
+  const avgLikes = getAvg(posts.map(getValueAt('likes')));
+
+  return posts.filter(isTypeMoreThan(avgLikes, 'likes'));
+};
 
 // users who have posted more than the average number of posts [{username: "Alice", postCount: 5}, {username: "Bob", postCount: 8}, {username: "Charlie", postCount: 3}] => [{username: "Bob", postCount: 8}]
-const filterActiveUsersByPostCount = function (users) { };
+const filterActiveUsersByPostCount = function (users) {
+  const avgPostCount = getAvg(users.map(getValueAt('postCount')));
+
+  return users.filter(isTypeMoreThan(avgPostCount, 'postCount'));
+};
 
 // filter people older than a certain age [{name: "Alice", age: 25}, {name: "Bob", age: 30}, {name: "Charlie", age: 22}] => [{name: "Bob", age: 30}]
-const filterByAge = function (people, age) { };
-
+const filterByAge = function (people, age) {
+  return people.filter(isTypeMoreThan(age, 'age'));
+};
 // filter products that are cheaper than a given price [{name: "item1", price: 20}, {name: "item2", price: 50}, {name: "item3", price: 10}] => [{name: "item1", price: 20}, {name: "item3", price: 10}]
-const filterByPrice = function (products, price) { };
+const filterByPrice = function (products, price) {
+  const isTypeLessThan = invert(isTypeMoreThan(price, 'price'));
+  return products.filter(isTypeLessThan);
+};
 
 // filter students who scored above a certain grade in Math [{name: "John", grades: {math: 80, science: 90}}, {name: "Jane", grades: {math: 70, science: 85}}] => [{name: "John", grades: {math: 80, science: 90}}]
 const filterByMathGrade = function (students, grade) { };
@@ -160,13 +178,16 @@ const filterBySalary = function (employees, salary) { };
 const filterByQuantity = function (orders, quantity) { };
 
 // filter books published after a certain year [{title: "Book1", year: 2020}, {title: "Book2", year: 2022}] => [{title: "Book2", year: 2022}]
-const filterByYear = function (books, year) { };
+const filterByYear = function (books, year) {
+  return books.filter(isTypeMoreThan(year, 'year'));
+};
+console.log(filterByYear([{title: "Book1", year: 2020}, {title: "Book2", year: 2022}] ,2021));
 
 // filter students with a grade higher than a given threshold in a specific subject [{name: "Alice", grades: {math: 90, science: 80}}, {name: "Bob", grades: {math: 70, science: 85}}] => [{name: "Alice", grades: {math: 90, science: 80}}]
 const filterBySubjectGrade = function (students, subject, threshold) { };
 
-// filter photos with a minimum number of likes [{id: 1, likes: 100}, {id: 2, likes: 50}] => [{id: 1, likes: 100}]
-const filterByLikes = function (photos, likes) { };
+// filter photos with a maximum number of likes [{id: 1, likes: 100}, {id: 2, likes: 50}] => [{id: 1, likes: 100}]
+const filterByLikes = function (photos, likes) { }; 
 
 // filter users who have made a certain number of posts [{username: "Alice", posts: 10}, {username: "Bob", posts: 5}] => [{username: "Alice", posts: 10}]
 const filterByPostCount = function (users, postCount) { };
